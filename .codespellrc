@@ -1,3 +1,4 @@
 [codespell]
 skip = .git,*.pdf,*.svg,package-lock.json
-# ignore-words-list = 
+# Whats - part of WhatsApp
+ignore-words-list = whats
