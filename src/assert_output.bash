@@ -8,6 +8,7 @@
 # Options:
 #   -p, --partial  Match if `expected` is a substring of `$output`
 #   -e, --regexp   Treat `expected` as an extended regular expression
+#   -d, --diff     Show diff between `expected` and `$output`
 #   -, --stdin     Read `expected` value from STDIN
 #   <expected>     The expected value, substring or regular expression
 #
@@ -56,6 +57,8 @@
 #   actual   : have
 #   --
 #   ```
+#
+# If the `--diff` option is set, a diff between the expected and actual output is shown.
 #
 # ## Existence
 #
@@ -126,6 +129,7 @@ assert_output() {
   local -i is_mode_regexp=0
   local -i is_mode_nonempty=0
   local -i use_stdin=0
+  local -i show_diff=0
   : "${output?}"
 
   # Handle options.
@@ -137,6 +141,7 @@ assert_output() {
     case "$1" in
     -p|--partial) is_mode_partial=1; shift ;;
     -e|--regexp) is_mode_regexp=1; shift ;;
+    -d|--diff) show_diff=1; shift ;;
     -|--stdin) use_stdin=1; shift ;;
     --) shift; break ;;
     *) break ;;
@@ -187,11 +192,17 @@ assert_output() {
     fi
   else
     if [[ $output != "$expected" ]]; then
-      batslib_print_kv_single_or_multi 8 \
-      'expected' "$expected" \
-      'actual'   "$output" \
-      | batslib_decorate 'output differs' \
-      | fail
+      if (( show_diff )); then
+        diff <(echo "$expected") <(echo "$output") \
+        | batslib_decorate 'output differs' \
+        | fail
+      else
+        batslib_print_kv_single_or_multi 8 \
+        'expected' "$expected" \
+        'actual'   "$output" \
+        | batslib_decorate 'output differs' \
+        | fail
+      fi
     fi
   fi
 }
