@@ -58,7 +58,7 @@
 #   -- value does not match golden --
 #   golden contents (1 lines):
 #   want
-#   actual output (1 lines):
+#   actual value (1 lines):
 #   have
 #   --
 #   ```
@@ -212,19 +212,19 @@ assert_equals_golden() {
   if (( assert_failed )); then
     if ! (( update_goldens_on_failure )); then
       if (( show_diff )); then
-        diff <(echo "$output") <(echo "$golden_file_contents") \
+        diff <(echo "$value") <(echo "$golden_file_contents") \
         | batslib_decorate 'value does not match golden' \
         | fail
       elif (( is_mode_regexp )); then
         batslib_print_kv_multi \
         'golden contents' "$golden_file_contents" \
-        'actual output'   "$output" \
+        'actual value'   "$value" \
         | batslib_decorate 'value does not match regexp golden' \
         | fail
       else
         batslib_print_kv_multi \
         'golden contents' "$golden_file_contents" \
-        'actual output'   "$output" \
+        'actual value'   "$value" \
         | batslib_decorate 'value does not match golden' \
         | fail
       fi
