@@ -234,9 +234,9 @@ ERR_MSG
 
 @test "assert_equals_golden: fails if output is newline with allowed empty golden" {
   run --keep-empty-lines printf '\n'
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --allow-empty "$tested_value" <(:)
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix output "lines" count in expected message.
@@ -505,9 +505,9 @@ ERR_MSG
 
 @test "assert_equals_golden --stdin: fails if output and golden do not match due to extra trailing newline" {
   run printf 'a'
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --stdin <(printf 'a\n') < <(printf "$tested_value")
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix golden "lines" count in expected message.
@@ -530,9 +530,9 @@ ERR_MSG
 
 @test "assert_equals_golden --stdin: fails if multiline output and golden do not match due to extra trailing newline" {
   run printf 'a\nb\nc'
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --stdin <(printf 'a\nb\nc\n') < <(printf "$tested_value")
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix golden "lines" count in expected message.
@@ -559,9 +559,9 @@ ERR_MSG
 
 @test "assert_equals_golden --stdin: fails if output and golden do not match due to extra missing newline" {
   run --keep-empty-lines printf 'a\n'
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --stdin <(printf 'a') < <(printf "$tested_value")
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix output "lines" count in expected message.
@@ -584,9 +584,9 @@ ERR_MSG
 
 @test "assert_equals_golden --stdin: fails if multiline output and golden do not match due to extra missing newline" {
   run --keep-empty-lines printf 'a\nb\nc\n'
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --stdin <(printf 'a\nb\nc') < <(printf "$tested_value")
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix output "lines" count in expected message.
@@ -663,9 +663,9 @@ ERR_MSG
 
 @test "assert_equals_golden --stdin: fails if output is newline with non-empty golden" {
   run --keep-empty-lines printf '\n'
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --stdin <(printf 'a') < <(printf "$tested_value")
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix output "lines" count in expected message.
@@ -688,9 +688,9 @@ ERR_MSG
 
 @test "assert_equals_golden --stdin: fails if output is newline with non-empty golden with '-' arg" {
   run --keep-empty-lines printf '\n'
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden - <(printf 'a') < <(printf "$tested_value")
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix output "lines" count in expected message.
@@ -713,9 +713,9 @@ ERR_MSG
 
 @test "assert_equals_golden --stdin: fails if output is newline with allowed empty golden" {
   run --keep-empty-lines printf '\n'
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --stdin --allow-empty <(:) < <(printf "$tested_value")
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix output "lines" count in expected message.
@@ -738,9 +738,9 @@ ERR_MSG
 
 @test "assert_equals_golden --stdin: fails if output is newline with allowed empty golden with '-' arg" {
   run --keep-empty-lines printf '\n'
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --allow-empty - <(:) < <(printf "$tested_value")
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix output "lines" count in expected message.
@@ -763,9 +763,9 @@ ERR_MSG
 
 @test "assert_equals_golden --stdin: fails if output is empty with newline golden" {
   run :
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --stdin <(printf '\n') < <(printf "$tested_value")
 
   # Need to use variable to match trailing end lines caused by using `--keep-empty-lines`.
@@ -787,9 +787,9 @@ ERR_MSG
 
 @test "assert_equals_golden --stdin: fails if output is empty with newline golden with '-' arg" {
   run :
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden - <(printf '\n') < <(printf "$tested_value")
 
   # Need to use variable to match trailing end lines caused by using `--keep-empty-lines`.
@@ -811,9 +811,9 @@ ERR_MSG
 
 @test "assert_equals_golden --stdin: fails if output is empty with newline golden - kept empty lines" {
   run --keep-empty-lines :
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --stdin <(printf '\n') < <(printf "$tested_value")
 
   # Need to use variable to match trailing end lines caused by using `--keep-empty-lines`.
@@ -1144,9 +1144,9 @@ ERR_MSG
 
 @test "assert_equals_golden --regexp: fails if output and golden do not match due to extra trailing newline" {
   run printf 'a'
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --regexp "$tested_value" <(printf 'a\n')
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix golden "lines" count in expected message.
@@ -1169,9 +1169,9 @@ ERR_MSG
 
 @test "assert_equals_golden --regexp: fails if multiline output and golden do not match due to extra trailing newline" {
   run printf 'a\nb\nc'
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --regexp "$tested_value" <(printf 'a\nb\nc\n')
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix golden "lines" count in expected message.
@@ -1198,9 +1198,9 @@ ERR_MSG
 
 @test "assert_equals_golden --regexp: fails if output and golden do not match due to extra missing newline" {
   run --keep-empty-lines printf 'a\n'
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --regexp "$tested_value" <(printf 'a')
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix output "lines" count in expected message.
@@ -1223,9 +1223,9 @@ ERR_MSG
 
 @test "assert_equals_golden --regexp: fails if multiline output and golden do not match due to extra missing newline" {
   run --keep-empty-lines printf 'a\nb\nc\n'
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --regexp "$tested_value" <(printf 'a\nb\nc')
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix output "lines" count in expected message.
@@ -1284,9 +1284,9 @@ ERR_MSG
 
 @test "assert_equals_golden --regexp: fails if output is newline with non-empty golden" {
   run --keep-empty-lines printf '\n'
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --regexp "$tested_value" <(printf 'a')
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix output "lines" count in expected message.
@@ -1309,9 +1309,9 @@ ERR_MSG
 
 @test "assert_equals_golden --regexp: fails if output is newline with allowed empty golden" {
   run --keep-empty-lines printf '\n'
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --regexp --allow-empty "$tested_value" <(:)
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix output "lines" count in expected message.
@@ -1334,9 +1334,9 @@ ERR_MSG
 
 @test "assert_equals_golden --regexp: fails if output is empty with newline golden" {
   run :
-  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --regexp "$tested_value" <(printf '\n')
 
   # Need to use variable to match trailing end lines caused by using `--keep-empty-lines`.
@@ -1568,6 +1568,7 @@ ERR_MSG
   run --keep-empty-lines printf 'aabbcc\nxxyyzz\n\n'
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --regexp "$tested_value" <(printf '[abc]+\n[xyz]+')
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix output "lines" count in expected message.
@@ -1595,6 +1596,7 @@ ERR_MSG
   run printf 'aabbcc\nxxyyzz'
   tested_value="$output"
   output='UNUSED'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_equals_golden --regexp "$tested_value" <(printf '[abc]+\n[xyz]+\n\n')
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix golden "lines" count in expected message.
@@ -2662,6 +2664,7 @@ ERR_MSG
 
 @test "assert_output_equals_golden --regexp: fails with multiline specific matching regex with extra trailing newlines" {
   run --keep-empty-lines printf 'aabbcc\nxxyyzz\n\n'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_output_equals_golden --regexp <(printf '[abc]+\n[xyz]+')
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix output "lines" count in expected message.
@@ -2687,6 +2690,7 @@ ERR_MSG
 
 @test "assert_output_equals_golden --regexp: fails with multiline specific matching regex with missing trailing newlines" {
   run printf 'aabbcc\nxxyyzz'
+  # Need to use `--keep-empty-lines` so that `${#lines[@]}` and `num_lines` can match in `assert_test_fail`.
   run --keep-empty-lines assert_output_equals_golden --regexp <(printf '[abc]+\n[xyz]+\n\n')
 
   # TODO(https://github.com/bats-core/bats-support/issues/11): Fix golden "lines" count in expected message.
