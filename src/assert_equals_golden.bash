@@ -78,7 +78,7 @@
 #
 # If `--regexp` is given, the golden file contents is treated as a multiline extended regular expression.
 # This allows for volatile output (e.g. timestamps, identifiers) and/or secrets to be removed from golden files, but still constrained for proper asserting.
-# Regular expression special characters (`][\.()*+?{}|^$`), when used as literals, must be escaped in the golden file.
+# Regular expression special characters (`][\.()*+?{}|^$\\`), when used as literals, must be escaped in the golden file.
 # The regular expression golden file contents respects `\n` characters and expressions which span multiple lines.
 #
 # If the `BATS_ASSERT_UPDATE_GOLDENS_ON_FAILURE` environment variable is set with `--regexp`, special logic is used to reuse lines where possible.
@@ -266,7 +266,7 @@ assert_equals_golden() {
         for line_in_output in "${output_lines[@]}"; do
           # Default the output line itself as the best guess for the new golden.
           # Though, the output line needs to be properly escaped for when being used in regex matching (on subsequent runs of the test).
-          best_guess_for_line="$(echo "$line_in_output" | sed -E 's/([][\.()*+?{}|^$])/\\\1/g')"
+          best_guess_for_line="$(echo "$line_in_output" | sed -E 's/([][\.()*+?{}|^$\\])/\\\1/g')"
           for line_in_golden in "${sorted_golden_lines[@]}"; do
             if [[ "$line_in_output" =~ ^${line_in_golden}$ ]]; then
               # If there's a line from the previous golden output that matches, use that is the best guess instead.
@@ -364,7 +364,7 @@ assert_equals_golden() {
 #
 # If `--regexp` is given, the golden file contents is treated as a multiline extended regular expression.
 # This allows for volatile output (e.g. timestamps, identifiers) and/or secrets to be removed from golden files, but still constrained for proper asserting.
-# Regular expression special characters (`][\.()*+?{}|^$`), when used as literals, must be escaped in the golden file.
+# Regular expression special characters (`][\.()*+?{}|^$\\`), when used as literals, must be escaped in the golden file.
 # The regular expression golden file contents respects `\n` characters and expressions which span multiple lines.
 #
 # If the `BATS_ASSERT_UPDATE_GOLDENS_ON_FAILURE` environment variable is set with `--regexp`, special logic is used to reuse lines where possible.
@@ -529,7 +529,7 @@ assert_output_equals_golden() {
         for line_in_output in "${output_lines[@]}"; do
           # Default the output line itself as the best guess for the new golden.
           # Though, the output line needs to be properly escaped for when being used in regex matching (on subsequent runs of the test).
-          best_guess_for_line="$(echo "$line_in_output" | sed -E 's/([][\.()*+?{}|^$])/\\\1/g')"
+          best_guess_for_line="$(echo "$line_in_output" | sed -E 's/([][\.()*+?{}|^$\\])/\\\1/g')"
           for line_in_golden in "${sorted_golden_lines[@]}"; do
             if [[ "$line_in_output" =~ ^${line_in_golden}$ ]]; then
               # If there's a line from the previous golden output that matches, use that is the best guess instead.
@@ -626,7 +626,7 @@ assert_output_equals_golden() {
 #
 # If `--regexp` is given, the golden file contents is treated as a multiline extended regular expression.
 # This allows for volatile output (e.g. timestamps, identifiers) and/or secrets to be removed from golden files, but still constrained for proper asserting.
-# Regular expression special characters (`][\.()*+?{}|^$`), when used as literals, must be escaped in the golden file.
+# Regular expression special characters (`][\.()*+?{}|^$\\`), when used as literals, must be escaped in the golden file.
 # The regular expression golden file contents respects `\n` characters and expressions which span multiple lines.
 #
 # If the `BATS_ASSERT_UPDATE_GOLDENS_ON_FAILURE` environment variable is set with `--regexp`, special logic is used to reuse lines where possible.
@@ -815,7 +815,7 @@ assert_file_equals_golden() {
         for line_in_output in "${output_lines[@]}"; do
           # Default the output line itself as the best guess for the new golden.
           # Though, the output line needs to be properly escaped for when being used in regex matching (on subsequent runs of the test).
-          best_guess_for_line="$(echo "$line_in_output" | sed -E 's/([][\.()*+?{}|^$])/\\\1/g')"
+          best_guess_for_line="$(echo "$line_in_output" | sed -E 's/([][\.()*+?{}|^$\\])/\\\1/g')"
           for line_in_golden in "${sorted_golden_lines[@]}"; do
             if [[ "$line_in_output" =~ ^${line_in_golden}$ ]]; then
               # If there's a line from the previous golden output that matches, use that is the best guess instead.

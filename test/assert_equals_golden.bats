@@ -3874,9 +3874,6 @@ ERR_MSG
 
   [ "$(cat "$temp_golden_file")" = "$tested_output" ]
   unset BATS_ASSERT_UPDATE_GOLDENS_ON_FAILURE
-  run printf "$tested_output"
-  tested_value="$output"
-  output='UNUSED'
   run assert_equals_golden "$tested_value" "$temp_golden_file"
 
   assert_test_pass
@@ -3928,9 +3925,6 @@ ERR_MSG
 
   [ "$(cat "$temp_golden_file")" = "$(printf "$tested_output")" ]
   unset BATS_ASSERT_UPDATE_GOLDENS_ON_FAILURE
-  run --keep-empty-lines printf "$tested_output"
-  tested_value="$output"
-  output='UNUSED'
   run assert_equals_golden "$tested_value" "$temp_golden_file"
 
   assert_test_pass
@@ -3959,9 +3953,6 @@ ERR_MSG
 
   [ "$(cat "$temp_golden_file")" = "$tested_output" ]
   unset BATS_ASSERT_UPDATE_GOLDENS_ON_FAILURE
-  run printf "$tested_output"
-  tested_value="$output"
-  output='UNUSED'
   run assert_equals_golden --regexp "$tested_value" "$temp_golden_file"
 
   assert_test_pass
@@ -4013,9 +4004,6 @@ ERR_MSG
 
   [ "$(cat "$temp_golden_file")" = "$(printf "$tested_output")" ]
   unset BATS_ASSERT_UPDATE_GOLDENS_ON_FAILURE
-  run --keep-empty-lines printf "$tested_output"
-  tested_value="$output"
-  output='UNUSED'
   run assert_equals_golden --regexp "$tested_value" "$temp_golden_file"
 
   assert_test_pass
@@ -4045,9 +4033,6 @@ ERR_MSG
   cat "$temp_golden_file"
   [ "$(cat "$temp_golden_file")" = "$(printf 'abc\n[d-l]{3}\n[d-l]{3}\n[d-l]{3}\n\n[^a].[op]\n\n')" ]
   unset BATS_ASSERT_UPDATE_GOLDENS_ON_FAILURE
-  run --keep-empty-lines printf "$tested_output"
-  tested_value="$output"
-  output='UNUSED'
   run assert_equals_golden --regexp "$tested_value" "$temp_golden_file"
 
   assert_test_pass
@@ -4077,9 +4062,6 @@ ERR_MSG
   cat "$temp_golden_file"
   [ "$(cat "$temp_golden_file")" = "$(printf 'abc\n[d-l]{3}\n[d-l]{3}\n\\]\\.\\{\n[d-l]{3}\n\n[^a].[op]')" ]
   unset BATS_ASSERT_UPDATE_GOLDENS_ON_FAILURE
-  run --keep-empty-lines printf "$tested_output"
-  tested_value="$output"
-  output='UNUSED'
   run assert_equals_golden --regexp "$tested_value" "$temp_golden_file"
 
   assert_test_pass
@@ -4109,9 +4091,35 @@ ERR_MSG
   cat "$temp_golden_file"
   [ "$(cat "$temp_golden_file")" = "$(printf 'abc\n[d-l]{3}\n[d-l]{3}\n\\]\\.\\{\n[d-l]{3}\n\n[^a].[op]\n\n')" ]
   unset BATS_ASSERT_UPDATE_GOLDENS_ON_FAILURE
+  run assert_equals_golden --regexp "$tested_value" "$temp_golden_file"
+
+  assert_test_pass
+}
+
+@test "auto-update: assert_equals_golden --regexp: updates golden for failure all special characters" {
+  temp_golden_file="$(mktemp -t "bats_test_${BATS_TEST_NUMBER}.XXXXXXXX.txt")"
+  [ -f "$temp_golden_file" ]
+  printf '[^a].[op]\n[d-l]{3}' > "$temp_golden_file"
+  [ "$(cat "$temp_golden_file")" = "$(printf '[^a].[op]\n[d-l]{3}')" ]
+
+  tested_output='[]\n.\n()\n*\n+\n?\n{}\n|\n^\n$\n\\'
+
   run --keep-empty-lines printf "$tested_output"
+  BATS_ASSERT_UPDATE_GOLDENS_ON_FAILURE=1
   tested_value="$output"
   output='UNUSED'
+  run assert_equals_golden --regexp "$tested_value" "$temp_golden_file"
+
+  assert_test_fail <<'ERR_MSG'
+
+-- FAIL: assert_equals_golden --
+Golden file updated after mismatch.
+--
+ERR_MSG
+
+  cat "$temp_golden_file"
+  [ "$(cat "$temp_golden_file")" = "$(printf '\\[\\]\n\\.\n\\(\\)\n\\*\n\\+\n\\?\n\\{\\}\n\\|\n\\^\n\\$\n\\\\')" ]
+  unset BATS_ASSERT_UPDATE_GOLDENS_ON_FAILURE
   run assert_equals_golden --regexp "$tested_value" "$temp_golden_file"
 
   assert_test_pass
@@ -4351,6 +4359,34 @@ ERR_MSG
   assert_test_pass
 }
 
+@test "auto-update: assert_output_equals_golden --regexp: updates golden for failure all special characters" {
+  temp_golden_file="$(mktemp -t "bats_test_${BATS_TEST_NUMBER}.XXXXXXXX.txt")"
+  [ -f "$temp_golden_file" ]
+  printf '[^a].[op]\n[d-l]{3}' > "$temp_golden_file"
+  [ "$(cat "$temp_golden_file")" = "$(printf '[^a].[op]\n[d-l]{3}')" ]
+
+  tested_output='[]\n.\n()\n*\n+\n?\n{}\n|\n^\n$\n\\'
+
+  run --keep-empty-lines printf "$tested_output"
+  BATS_ASSERT_UPDATE_GOLDENS_ON_FAILURE=1
+  run assert_output_equals_golden --regexp "$temp_golden_file"
+
+  assert_test_fail <<'ERR_MSG'
+
+-- FAIL: assert_output_equals_golden --
+Golden file updated after mismatch.
+--
+ERR_MSG
+
+  cat "$temp_golden_file"
+  [ "$(cat "$temp_golden_file")" = "$(printf '\\[\\]\n\\.\n\\(\\)\n\\*\n\\+\n\\?\n\\{\\}\n\\|\n\\^\n\\$\n\\\\')" ]
+  unset BATS_ASSERT_UPDATE_GOLDENS_ON_FAILURE
+  run --keep-empty-lines printf "$tested_output"
+  run assert_output_equals_golden --regexp "$temp_golden_file"
+
+  assert_test_pass
+}
+
 @test "auto-update: assert_file_equals_golden: updates golden for failure" {
   temp_golden_file="$(mktemp -t "bats_test_${BATS_TEST_NUMBER}.XXXXXXXX.txt")"
   [ -f "$temp_golden_file" ]
@@ -4563,6 +4599,32 @@ ERR_MSG
 
   cat "$temp_golden_file"
   [ "$(cat "$temp_golden_file")" = "$(printf 'abc\n[d-l]{3}\n[d-l]{3}\n\\]\\.\\{\n[d-l]{3}\n\n[^a].[op]\n\n')" ]
+  unset BATS_ASSERT_UPDATE_GOLDENS_ON_FAILURE
+  run assert_file_equals_golden --regexp <(printf "$tested_output") "$temp_golden_file"
+
+  assert_test_pass
+}
+
+@test "auto-update: assert_file_equals_golden --regexp: updates golden for failure all special characters" {
+  temp_golden_file="$(mktemp -t "bats_test_${BATS_TEST_NUMBER}.XXXXXXXX.txt")"
+  [ -f "$temp_golden_file" ]
+  printf '[^a].[op]\n[d-l]{3}' > "$temp_golden_file"
+  [ "$(cat "$temp_golden_file")" = "$(printf '[^a].[op]\n[d-l]{3}')" ]
+
+  tested_output='[]\n.\n()\n*\n+\n?\n{}\n|\n^\n$\n\\'
+
+  BATS_ASSERT_UPDATE_GOLDENS_ON_FAILURE=1
+  run assert_file_equals_golden --regexp <(printf "$tested_output") "$temp_golden_file"
+
+  assert_test_fail <<'ERR_MSG'
+
+-- FAIL: assert_file_equals_golden --
+Golden file updated after mismatch.
+--
+ERR_MSG
+
+  cat "$temp_golden_file"
+  [ "$(cat "$temp_golden_file")" = "$(printf '\\[\\]\n\\.\n\\(\\)\n\\*\n\\+\n\\?\n\\{\\}\n\\|\n\\^\n\\$\n\\\\')" ]
   unset BATS_ASSERT_UPDATE_GOLDENS_ON_FAILURE
   run assert_file_equals_golden --regexp <(printf "$tested_output") "$temp_golden_file"
 
