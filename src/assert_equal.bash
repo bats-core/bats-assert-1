@@ -3,7 +3,7 @@
 #
 # Summary: Fail if the actual and expected values are not equal.
 #
-# Usage: assert_equal <actual> <expected>
+# Usage: assert_equal [-d] <actual> <expected>
 #
 # Options:
 #   <actual>      The value being compared.
@@ -39,14 +39,14 @@ assert_equal() {
 
   while (( $# > 0 )); do
     case "$1" in
-    -d|--diff) show_diff=1; shift ;;
+    -d|--diff) show_diff=$(( $# > 1 )); shift ;;
     *) break ;;
     esac
   done
 
   if [[ $1 != "$2" ]]; then
     if (( show_diff )); then
-      diff <(echo "$2") <(echo "$1") \
+      diff -u <(echo "$1") <(echo "$2") | tail -n +3 \
       | batslib_decorate 'values do not equal' \
       | fail
     else

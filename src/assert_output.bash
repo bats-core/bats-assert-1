@@ -3,7 +3,7 @@
 #
 # Summary: Fail if `$output' does not match the expected output.
 #
-# Usage: assert_output [-p | -e] [- | [--] <expected>]
+# Usage: assert_output [-p | -e | -d] [- | [--] <expected>]
 #
 # Options:
 #   -p, --partial  Match if `expected` is a substring of `$output`
@@ -190,19 +190,23 @@ assert_output() {
       | batslib_decorate 'output does not contain substring' \
       | fail
     fi
+  elif (( show_diff )); then
+    if (( $# == 0 )); then
+      echo "Missing expected output" \
+      | batslib_decorate 'ERROR: assert_output' \
+      | fail
+    elif [[ $output != "$expected" ]]; then
+      diff -u <(echo "$output") <(echo "$expected") | tail -n +3 \
+      | batslib_decorate 'output differs' \
+      | fail
+    fi
   else
     if [[ $output != "$expected" ]]; then
-      if (( show_diff )); then
-        diff <(echo "$expected") <(echo "$output") \
-        | batslib_decorate 'output differs' \
-        | fail
-      else
-        batslib_print_kv_single_or_multi 8 \
-        'expected' "$expected" \
-        'actual'   "$output" \
-        | batslib_decorate 'output differs' \
-        | fail
-      fi
+      batslib_print_kv_single_or_multi 8 \
+      'expected' "$expected" \
+      'actual'   "$output" \
+      | batslib_decorate 'output differs' \
+      | fail
     fi
   fi
 }
