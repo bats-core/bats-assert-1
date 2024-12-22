@@ -3,12 +3,13 @@
 #
 # Summary: Fail if the expected line is not found in the output (default) or at a specific line number.
 #
-# Usage: assert_line [-n index] [-p | -e] [--] <expected>
+# Usage: assert_line [-n index] [-p | -e] [-s | --use-stderr] [--] <expected>
 #
 # Options:
 #   -n, --index <idx> Match the <idx>th line
 #   -p, --partial     Match if `expected` is a substring of `$output` or line <idx>
 #   -e, --regexp      Treat `expected` as an extended regular expression
+#   -s, --use-stderr  Match against `$stderr_lines` instead of `$lines`
 #   <expected>        The expected line string, substring, or regular expression
 #
 # IO:
@@ -17,6 +18,8 @@
 # Globals:
 #   output
 #   lines
+#   stderr
+#   stderr_lines
 # Returns:
 #   0 - if matching line found
 #   1 - otherwise
@@ -131,7 +134,7 @@ assert_line() {
   local -i is_match_line=0
   local -i is_mode_partial=0
   local -i is_mode_regexp=0
-  : "${lines?}"
+  local -i use_stderr=0
 
   # Handle options.
   while (( $# > 0 )); do
@@ -149,6 +152,7 @@ assert_line() {
       ;;
     -p|--partial) is_mode_partial=1; shift ;;
     -e|--regexp) is_mode_regexp=1; shift ;;
+    -s|--use-stderr) use_stderr=1; shift ;;
     --) shift; break ;;
     *) break ;;
     esac
@@ -171,33 +175,43 @@ assert_line() {
     return $?
   fi
 
+  # Select lines array based on use_stderr.
+  local -n selected_lines
+  if (( use_stderr )); then
+    : "${stderr_lines?}"
+    selected_lines="stderr_lines"
+  else
+    : "${lines?}"
+    selected_lines="lines"
+  fi
+
   # Matching.
   if (( is_match_line )); then
     # Specific line.
     if (( is_mode_regexp )); then
-      if ! [[ ${lines[$idx]} =~ $expected ]]; then
+      if ! [[ ${selected_lines[$idx]} =~ $expected ]]; then
         batslib_print_kv_single 6 \
         'index' "$idx" \
         'regexp' "$expected" \
-        'line'  "${lines[$idx]}" \
+        'line'  "${selected_lines[$idx]}" \
         | batslib_decorate 'regular expression does not match line' \
         | fail
       fi
     elif (( is_mode_partial )); then
-      if [[ ${lines[$idx]} != *"$expected"* ]]; then
+      if [[ ${selected_lines[$idx]} != *"$expected"* ]]; then
         batslib_print_kv_single 9 \
         'index'     "$idx" \
         'substring' "$expected" \
-        'line'      "${lines[$idx]}" \
+        'line'      "${selected_lines[$idx]}" \
         | batslib_decorate 'line does not contain substring' \
         | fail
       fi
     else
-      if [[ ${lines[$idx]} != "$expected" ]]; then
+      if [[ ${selected_lines[$idx]} != "$expected" ]]; then
         batslib_print_kv_single 8 \
         'index'    "$idx" \
         'expected' "$expected" \
-        'actual'   "${lines[$idx]}" \
+        'actual'   "${selected_lines[$idx]}" \
         | batslib_decorate 'line differs' \
         | fail
       fi
@@ -206,8 +220,8 @@ assert_line() {
     # Contained in output.
     if (( is_mode_regexp )); then
       local -i idx
-      for (( idx = 0; idx < ${#lines[@]}; ++idx )); do
-        [[ ${lines[$idx]} =~ $expected ]] && return 0
+      for (( idx = 0; idx < ${#selected_lines[@]}; ++idx )); do
+        [[ ${selected_lines[$idx]} =~ $expected ]] && return 0
       done
       { local -ar single=( 'regexp' "$expected" )
         local -ar may_be_multi=( 'output' "$output" )
@@ -219,8 +233,8 @@ assert_line() {
       | fail
     elif (( is_mode_partial )); then
       local -i idx
-      for (( idx = 0; idx < ${#lines[@]}; ++idx )); do
-        [[ ${lines[$idx]} == *"$expected"* ]] && return 0
+      for (( idx = 0; idx < ${#selected_lines[@]}; ++idx )); do
+        [[ ${selected_lines[$idx]} == *"$expected"* ]] && return 0
       done
       { local -ar single=( 'substring' "$expected" )
         local -ar may_be_multi=( 'output' "$output" )
@@ -232,8 +246,8 @@ assert_line() {
       | fail
     else
       local -i idx
-      for (( idx = 0; idx < ${#lines[@]}; ++idx )); do
-        [[ ${lines[$idx]} == "$expected" ]] && return 0
+      for (( idx = 0; idx < ${#selected_lines[@]}; ++idx )); do
+        [[ ${selected_lines[$idx]} == "$expected" ]] && return 0
       done
       { local -ar single=( 'line' "$expected" )
         local -ar may_be_multi=( 'output' "$output" )
